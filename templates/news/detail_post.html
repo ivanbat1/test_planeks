@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load mptt_tags %}
+{% block link %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{% endblock %}
+{% block content %}
+    <div style="margin-top: 6%;">
+        <div class="text-center" style="max-width: 50%; margin: auto;">
+                {{ post.content|safe }}
+        </div>
+        {% recursetree comments %}
+            <div class="media">
+                <img src="{% static 'img_avatar3.png' %}" alt="John Doe" class="mr-3 mt-3 rounded-circle"
+                     style="width:60px;">
+                <div class="media-body">
+                    <h5 onclick="commentJs({{ node.pk }})" class="mt-0">{{ node.author }}</h5>
+                    {{ node.comment }}
+                    {% if not node.is_leaf_node %}
+                        <div class="media mt-3">
+                            <div class="media-body">
+                                <h5 onclick="commentJs({{ children.pk }})" class="mt-0">{{ children.author }}</h5>
+                                {{ children }}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endrecursetree %}
+        <form method="post" action="{% url 'detail-post' pk=post.pk %}" class="form-signin" id="commentForm">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="comment">Comment</label>
+                <input type="text" name="comment" id="comment" class="form-control">
+                <input type="number" style="display: none;" name="parent" id="parent" class="form-control">
+            </div>
+            <button id="submitComment" type="submit">Sent</button>
+        </form>
+    </div>
+    <script>
+        comment = submit_form.bind(null, submitRegistration, "submitComment", null);
+        document.getElementById("commentForm").addEventListener("submit", comment);
+    </script>
+{% endblock %}

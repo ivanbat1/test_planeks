@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block link %}
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+    <style>.input-date {
+        max-width: 20%;
+        margin: auto;
+    }</style>
+{% endblock %}
+{% block content %}
+    <div style="margin-top: 6%;" class="text-center">
+        <form method="post" action="{% url 'create-post' %}" id="submitUserSignup">
+            {% csrf_token %}
+            {{ form.content|safe }}<br>
+            <p>url</p>
+            {{ form.url }}<br>
+            <p>title</p>
+            {{ form.title }}
+            <p>date create</p>
+            {{ form.date_create }}
+            <div class="form-group">
+                <button id="submitSignUp" type="submit" value="SignUp"
+                        class="btn btn-success">submit
+                </button>
+            </div>
+        </form>
+    </div>
+    <script>
+        post = submit_form.bind(null, submitRegistration, "submitSignUp", null);
+        document.getElementById("submitUserSignup").addEventListener("submit", post);
+    </script>
+{% endblock %}
